@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DemoK8s API Documentation</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 10px;
+      }
+      h2 {
+        color: #34495e;
+        margin-top: 30px;
+      }
+      .endpoint {
+        background-color: #f8f9fa;
+        border-left: 4px solid #007bff;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 4px;
+      }
+      .method {
+        background-color: #28a745;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-weight: bold;
+        display: inline-block;
+        margin-right: 10px;
+      }
+      .method.post {
+        background-color: #28a745;
+      }
+      .method.get {
+        background-color: #007bff;
+      }
+      .url {
+        font-family: "Courier New", monospace;
+        background-color: #e9ecef;
+        padding: 5px 8px;
+        border-radius: 4px;
+      }
+      .request-body,
+      .response {
+        background-color: #f1f3f4;
+        padding: 10px;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+      pre {
+        background-color: #2d3748;
+        color: #e2e8f0;
+        padding: 15px;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+      .base-url {
+        background-color: #e3f2fd;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 DemoK8s API Documentation</h1>
+
+      <div class="base-url">
+        <strong>Base URL:</strong> <code>http://localhost:8080</code>
+      </div>
+
+      <h2>📋 Tổng quan</h2>
+      <p>
+        DemoK8s là một ứng dụng Spring Boot để quản lý Kubernetes labs và pods.
+        API này cung cấp các endpoint để tạo và quản lý các môi trường lab trong
+        Kubernetes cluster.
+      </p>
+
+      <h2>🔗 API Endpoints</h2>
+
+      <div class="endpoint">
+        <div>
+          <span class="method post">POST</span>
+          <span class="url">/create-lab</span>
+        </div>
+        <h3>Tạo Lab Mới</h3>
+        <p>
+          Tạo một lab mới trong Kubernetes cluster với script setup tùy chỉnh.
+        </p>
+
+        <h4>Request Body:</h4>
+        <div class="request-body">
+          <pre>
+{
+  "scriptContent": "#!/bin/bash\necho 'Hello World'\napt-get update\napt-get install -y curl"
+}</pre
+          >
+        </div>
+
+        <h4>Response Success (200):</h4>
+        <div class="response">
+          <pre>
+{
+  "status": "success",
+  "message": "Lab đã được tạo thành công",
+  "podName": "practice-pod-a1b2c3d4",
+  "configMapName": "setup-script-a1b2c3d4"
+}</pre
+          >
+        </div>
+
+        <h4>Response Error (400):</h4>
+        <div class="response">
+          <pre>
+{
+  "status": "error",
+  "message": "script_content không được để trống",
+  "podName": null,
+  "configMapName": null
+}</pre
+          >
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div>
+          <span class="method get">GET</span>
+          <span class="url">/pods</span>
+        </div>
+        <h3>Lấy Danh Sách Pods</h3>
+        <p>Lấy danh sách tất cả pods trong namespace kodeklone.</p>
+
+        <h4>Response (200):</h4>
+        <div class="response">
+          <pre>
+[
+  {
+    "name": "practice-pod-a1b2c3d4",
+    "status": "Running",
+    "namespace": "kodeklone",
+    "creationTimestamp": "2025-07-26T12:59:10Z"
+  }
+]</pre
+          >
+        </div>
+      </div>
+
+      <h2>🔧 WebSocket Endpoints</h2>
+
+      <div class="endpoint">
+        <div>
+          <span class="method get">WS</span>
+          <span class="url">/terminal</span>
+        </div>
+        <h3>Terminal WebSocket</h3>
+        <p>Kết nối WebSocket để tương tác với terminal của pod.</p>
+        <p><strong>URL:</strong> <code>ws://localhost:8080/terminal</code></p>
+      </div>
+
+      <h2>⚙️ Cấu hình</h2>
+      <ul>
+        <li><strong>Kubernetes Cluster:</strong> https://127.0.0.1:51997</li>
+        <li><strong>Default Namespace:</strong> kodeklone</li>
+        <li><strong>Service Account:</strong> jenkins-admin</li>
+      </ul>
+
+      <h2>📝 Ghi chú</h2>
+      <ul>
+        <li>Tất cả labs được tạo trong namespace <code>kodeklone</code></li>
+        <li>Mỗi lab có một ConfigMap chứa script setup</li>
+        <li>Pod names và ConfigMap names được tạo với UUID ngẫu nhiên</li>
+        <li>WebSocket terminal hỗ trợ tương tác real-time với pods</li>
+      </ul>
+
+      <h2>🛠️ Công nghệ sử dụng</h2>
+      <ul>
+        <li>Spring Boot 3.5.3</li>
+        <li>Kubernetes Java Client 24.0.0</li>
+        <li>WebSocket support</li>
+        <li>JSch for SSH connections</li>
+      </ul>
+    </div>
+  </body>
+</html>
